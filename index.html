@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f3">
+  <meta name="description" content="SakuRapi adalah pencatat pemasukan dan pengeluaran pribadi yang sederhana, gratis, dan menyimpan data hanya di perangkatmu.">
+  <title>SakuRapi — catatan keuangan pribadi</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="#utama" aria-label="SakuRapi, ke halaman utama">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M7 10.5A3.5 3.5 0 0 1 10.5 7H25v18H10.5A3.5 3.5 0 0 1 7 21.5v-11Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M7.5 11H22a3 3 0 0 1 3 3v2H18a3 3 0 0 0 0 6h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="18" cy="19" r="1" fill="currentColor"/></svg>
+        </span>
+        <span>Saku<span class="brand-accent">Rapi</span></span>
+      </a>
+      <div class="privacy-pill"><span class="privacy-dot" aria-hidden="true"></span> Data tersimpan di perangkat ini</div>
+    </header>
+
+    <main id="utama">
+      <section class="intro-row" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">RUANG KEUANGANMU</p>
+          <h1 id="page-title">Biar uang lebih <span>terarah.</span></h1>
+          <p class="intro-copy">Catat pemasukan dan pengeluaran tanpa ribet. Tidak perlu akun, data tidak dikirim ke server.</p>
+        </div>
+        <div class="month-control">
+          <label for="month-filter">Ringkasan bulan</label>
+          <input id="month-filter" type="month" aria-label="Pilih bulan untuk ringkasan">
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="Ringkasan keuangan bulan ini">
+        <article class="summary-card income-card">
+          <div class="summary-heading"><span class="summary-icon" aria-hidden="true">↙</span><span>Pemasukan</span></div>
+          <p id="income-total" class="summary-value">Rp0</p>
+          <p class="summary-note">Total uang masuk</p>
+        </article>
+        <article class="summary-card expense-card">
+          <div class="summary-heading"><span class="summary-icon" aria-hidden="true">↗</span><span>Pengeluaran</span></div>
+          <p id="expense-total" class="summary-value">Rp0</p>
+          <p class="summary-note">Total uang keluar</p>
+        </article>
+        <article class="summary-card balance-card">
+          <div class="summary-heading"><span class="summary-icon" aria-hidden="true">＝</span><span>Selisih bulan ini</span></div>
+          <p id="balance-total" class="summary-value">Rp0</p>
+          <p id="balance-note" class="summary-note">Pemasukan dikurangi pengeluaran</p>
+        </article>
+      </section>
+
+      <div class="content-grid">
+        <section class="panel add-panel" aria-labelledby="add-title">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">MULAI DARI YANG KECIL</p>
+              <h2 id="add-title">Catat transaksi</h2>
+            </div>
+            <span class="heading-spark" aria-hidden="true">✦</span>
+          </div>
+
+          <form id="transaction-form" novalidate>
+            <fieldset class="type-switch">
+              <legend>Jenis transaksi</legend>
+              <label class="type-option expense-option"><input type="radio" name="type" value="expense" checked><span>− Pengeluaran</span></label>
+              <label class="type-option income-option"><input type="radio" name="type" value="income"><span>＋ Pemasukan</span></label>
+            </fieldset>
+
+            <label class="field-label" for="description">Nama transaksi</label>
+            <input id="description" name="description" type="text" maxlength="70" placeholder="Contoh: makan siang" autocomplete="off" required>
+
+            <div class="form-row">
+              <div class="field-group">
+                <label class="field-label" for="amount">Jumlah (rupiah)</label>
+                <div class="amount-input"><span aria-hidden="true">Rp</span><input id="amount" name="amount" type="number" min="1" step="1" inputmode="numeric" placeholder="25000" required></div>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="date">Tanggal</label>
+                <input id="date" name="date" type="date" required>
+              </div>
+            </div>
+
+            <label class="field-label" for="category">Kategori</label>
+            <select id="category" name="category" required></select>
+            <button class="primary-button" type="submit"><span aria-hidden="true">＋</span> Simpan transaksi</button>
+            <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="panel history-panel" aria-labelledby="history-title">
+          <div class="history-heading">
+            <div>
+              <p class="eyebrow">JEJAK LANGKAHMU</p>
+              <h2 id="history-title">Riwayat transaksi</h2>
+            </div>
+            <button id="export-button" class="secondary-button" type="button" title="Unduh transaksi bulan terpilih sebagai CSV">Unduh CSV <span aria-hidden="true">↓</span></button>
+          </div>
+
+          <div class="history-tools">
+            <label class="search-box"><span class="visually-hidden">Cari transaksi</span><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Cari transaksi…" autocomplete="off"></label>
+            <div class="filter-tabs" role="group" aria-label="Filter jenis transaksi">
+              <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">Semua</button>
+              <button class="filter-button" type="button" data-filter="income" aria-pressed="false">Masuk</button>
+              <button class="filter-button" type="button" data-filter="expense" aria-pressed="false">Keluar</button>
+            </div>
+          </div>
+
+          <p id="result-count" class="result-count"></p>
+          <ul id="transactions-list" class="transactions-list" aria-label="Daftar transaksi"></ul>
+          <div id="empty-state" class="empty-state">
+            <span class="empty-illustration" aria-hidden="true">✳</span>
+            <h3>Belum ada catatan</h3>
+            <p>Transaksi untuk bulan ini akan muncul di sini. Mulai dengan mencatat satu hal kecil.</p>
+          </div>
+          <div id="no-results" class="empty-state compact-empty" hidden>
+            <h3>Tidak ada yang cocok</h3>
+            <p>Coba ubah kata kunci atau filter pencarianmu.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p><strong>Privasi dulu.</strong> Semua catatan hanya tersimpan di browser perangkat ini.</p>
+      <p class="footer-small">SakuRapi bukan layanan keuangan. Ekspor CSV-mu secara berkala agar data tetap aman.</p>
+    </footer>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
